@@ -53,15 +53,14 @@ object DegreesOfSeparation {
      */
     def flatMapper(bfsNode: BFSNode) : List[BFSNode] =  bfsNode match {
       case (id, (connections, degrees, "GRAY")) => 
-        val expandedConnections = connections.foldLeft(List.empty[BFSNode]) {
+       connections.foldLeft((id, (connections, degrees, "BLACK")) :: List.empty[BFSNode]) {
         case (accumulator, connection) =>
           if (connection == targetCharacterId) {
             hitCounter.add(1)
           }
           (connection, (Array.empty[Int], degrees + 1, "GRAY")) :: accumulator 
         }
-        //Add the original entry back to retain its connections and mark its color as BLACK to show its processed
-        (id, (connections, degrees, "BLACK")) :: expandedConnections
+         
       case _ => bfsNode :: Nil
     }
     
@@ -80,7 +79,8 @@ object DegreesOfSeparation {
       
       val newConnections = (bfsData1, bfsData2) match {
         case ( (Array(), _, _), (other, _, _)) => other
-        case ( (other, _, _), (Array(), _, _)) => other        
+        case ( (other, _, _), (Array(), _, _)) => other
+        case _ => bfsData1._1
       }
 
       (newConnections, distance, nodeColor)
