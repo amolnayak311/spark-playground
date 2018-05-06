@@ -42,8 +42,7 @@ object MovieRecommendationsALS {
     
     val userRatings = ratings.filter(_.user == userId).collect()
     val movies = loadMovieNames();
-    //TODO: Fix StackOverFlowError
-    val model = ALS.train(ratings, 8, 20)
+    val model = ALS.train(ratings, 8, 10)
     
     println("Existing ratings for the user are\n")
     userRatings.foreach(x => println(movies(x.product) + ": " + x.rating))
@@ -51,9 +50,7 @@ object MovieRecommendationsALS {
     println("\nTop 10 predictions for the user are\n")
     
     val recommendations = model.recommendProducts(userId, 10)
-    recommendations.foreach(x => println(movies(x.product) + ": " + x.rating))
-    
-    
-    
+    recommendations.foreach(x => println(movies(x.product) + ": " + x.rating))    
+   
   }
 }

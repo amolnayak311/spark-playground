@@ -36,7 +36,7 @@ object LinearRegressionDataFrame {
      
            
      val regression = new LinearRegression()
-                      .setMaxIter(10)
+                      .setMaxIter(100)
                       .setElasticNetParam(0.8)
                       .setRegParam(0.01)
                       
@@ -46,10 +46,10 @@ object LinearRegressionDataFrame {
      
      println(s"RMSE: ${modelSummary.rootMeanSquaredError}, R2: ${modelSummary.r2}\n")
      
-     val results = lrModel.transform(test)
+     val results = lrModel.transform(test).cache()
      results.show()
      
-     val rdd = results.rdd.map(r => (r.getAs[Double]("label"), r.getAs[Double]("prediction")))
+     val rdd = results.rdd.map(r => (r.getAs[Double]("prediction"), r.getAs[Double]("label")))
      
      val regMetrics = new RegressionMetrics(rdd)    
      println(s"RMSE on test data is ${regMetrics.rootMeanSquaredError}, r2 is ${regMetrics.r2}\n")
